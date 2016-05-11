@@ -18,7 +18,7 @@ class MOS_6502{
 		unsigned char * memory; // Memory
 		unsigned short lastByte; // Last instruction loaded 
 		void (MOS_6502::*instructions[0x100])(void);
-	
+		
 	
 	public:
 		MOS_6502(int);
@@ -38,20 +38,21 @@ class MOS_6502{
 		/** FUNCTIONS */
 		void ExitOnUnrecognizedInstruction();
 		void ADCIMM();
-		void ADCZP();
-		void BCC();
-		void BBS();
 		
-		void BEQ();
-		/* Clear carry flag */
+		
+		
 		void CLC();
-		/* Clear overflow flag */
+		void CLD();
+		void CLI();
 		void CLV();
 		
-		void LDAIMM();
+		
 		/* Set carry flag */
 		void SEC();
-
+		void SED();
+		void SEI();
+		
+	
 
 };
 
@@ -70,12 +71,19 @@ class MOS_6502{
 #define set_bit(number, x)\
 	 number |= (1 << x);
 #define clear_bit(number, x)\
-	number |=  !!(number & (1 << x));
+	number &=  ~(1 << x);
 #define toggle_bit(number, x)\
 	number ^= (1 << x);
 	
 #define get_bit(number, x)\
 	((number >> x) & 1)	
+
+#define set_flag(x)\
+	set_bit(P, x)
+#define clear_flag(x)\
+	clear_bit(P, x)
+#define toggle_flag(x)\
+	toggle_bit(P, x)
 
 #define reset_negative_and_zero_flags()\
 	clear_bit(P,FLAG_NEGATIVE)\
@@ -87,6 +95,7 @@ class MOS_6502{
 	if(A >= 0x80)\
 		set_bit(P,FLAG_NEGATIVE)
 
-
+/** Using macro it should be faster than using a function call */
+#define CARRY get_bit(P, FLAG_CARRY)
 
 #endif

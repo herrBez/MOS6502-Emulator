@@ -1,7 +1,6 @@
 #include "../header/MOS6502.hpp"
 
-/** Using macro it should be faster than using a function call */
-#define CARRY get_bit(P, FLAG_CARRY)
+
 
 /** Branch functions: use signed byte in order to move with an offset */
 int MOS_6502::getRelativeOffset(int position){
@@ -19,78 +18,65 @@ int MOS_6502::getRelativeOffset(int position){
 
 
 
-/** */
+/** This instruction affects the accumulator; sets the carry flag
+when the sum of a binary add exceeds 255 or when the sum of a decimal
+add exceeds 99, otherwise carry is reset.
+The overflow flag is set
+when the sign or bit 7 is changed due to the result exceeding +127
+or -128, otherwise overflow is reset.
+The negative flag is set if
+the accumulator result contains bit 7 on, otherwise the negative
+flag is reset.
+The zero flag is set if the accumulator result is 0,
+otherwise the zero flag is reset.*/
+
 void MOS_6502::ADCIMM(){
+	unsigned short limit = get_bit(P, FLAG_DECIMAL_MODE) == 1?100:0x100;
 	unsigned short tmp = A + memory[PC++] + CARRY;
 	clear_bit(P, FLAG_CARRY);
 	reset_negative_and_zero_flags();
-	if(tmp > 0xFF)
+	if(tmp >= limit)
 		set_bit(P, FLAG_CARRY);//Add carry
 	
-	A = (tmp % 0x100);
+	A = (tmp % limit);
 	set_negative_and_zero_flags_if_neccessary();
 }
-/** */
-void MOS_6502::ADCZP(){
-	unsigned short tmp = A + memory[memory[PC++]] + CARRY;
-	clear_bit(P, FLAG_CARRY);
-	if(tmp > 0xFF)
-		set_bit(P, FLAG_CARRY); 
-	A = (tmp % 0x100);
-}
 
-
-
-
-/** Branch on carry clear */
-void MOS_6502::BCC(){
-	if(P &= 0x01 == 0x1){ //Carry not clear
-		PC++;
-		return;
-	}	
-	PC += getRelativeOffset(PC) + 1;
-}
-/** Branch on carry set */
-void MOS_6502::BBS(){
-	if(P &= 0x01 == 0x0){ //Carry set
-		PC += 2;
-		return;
-	}
-	PC += getRelativeOffset(PC) + 1;
-}
-
-/** Branch on result zero --> which result?*/
-void MOS_6502::BEQ(){
-	if((P & 0x02) == 0x0){// Z Flag is zero  (Last result is zero??)
-		PC += 2;
-		return;
-	}
-	PC +=getRelativeOffset(PC) + 1;
-}
 
 /** Clear carry flag */
 void MOS_6502::CLC(){
-	clear_bit(P, FLAG_CARRY);
-	PC++;
+	clear_flag(FLAG_CARRY);
 }
+
+void MOS_6502::CLD(){
+	clear_flag(FLAG_DECIMAL_MODE);
+}
+
+/** Clear interrupt result status */
+void MOS_6502::CLI(){
+	clear_flag(FLAG_IRQ_DISABLE);
+}
+
 
 /** Clear overflow flag */
 void MOS_6502::CLV(){
-	clear_bit(P, FLAG_OVERFLOW);
-	PC++;
+	clear_flag(FLAG_OVERFLOW);
 }
-/** LDA SET */
-/** Load Accumulator with memory immediate*/
-void MOS_6502::LDAIMM(){
-	reset_negative_and_zero_flags();
-	A = memory[PC++];
-	set_negative_and_zero_flags_if_neccessary();
-}
+
+
+
 
 /** Set Carry Flag to 1 */
 void MOS_6502::SEC(){
-	set_bit(P, FLAG_CARRY);
-	++PC;
+	set_flag(FLAG_CARRY);
+}
+
+void MOS_6502::SED(){
+	set_flag(FLAG_DECIMAL_MODE);
+}
+
+void MOS_6502::SEI(){
+	set_flag(FLAG_IRQ_DISABLE);
 }
 
 /** */

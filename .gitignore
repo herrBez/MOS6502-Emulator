@@ -30,3 +30,6 @@
 
 # Debug files
 *.dSYM/
+
+#Don't push executable -> Main
+*/Main

@@ -11,8 +11,16 @@ MOS_6502::MOS_6502(int memory_size) {
 	for(int i = 0x0; i < 0x100; i++)
 		instructions[i] = &MOS_6502::ExitOnUnrecognizedInstruction;
 	instructions[0x69] = &MOS_6502::ADCIMM;
-	instructions[0x90] = &MOS_6502::BCC;
-
+	instructions[0x18] = &MOS_6502::CLC;
+	instructions[0xD8] = &MOS_6502::CLD;
+	instructions[0x58] = &MOS_6502::CLI;
+	instructions[0xB8] = &MOS_6502::CLV;
+	instructions[0x38] = &MOS_6502::SEC;
+	instructions[0xF8] = &MOS_6502::SED;
+	instructions[0x78] = &MOS_6502::SEI;
+	
+	#ifdef DEBUG
+	#endif
 }
 
 
