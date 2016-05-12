@@ -37,17 +37,40 @@ class MOS_6502{
 		int getRelativeOffset(int position);
 		/** FUNCTIONS */
 		void ExitOnUnrecognizedInstruction();
+		/* ADC functions */
 		void ADCIMM();
 		
+		/* AND functions */
+		void ANDIMM();
 		
-		
+		/* Clear flags */
 		void CLC();
 		void CLD();
 		void CLI();
 		void CLV();
 		
+		/* Decrement functions */
+		void DEX();
+		void DEY();
+		void DECZP();
+		void DECZPX();
+		void DECABS();
+		void DECABSX();
+
 		
-		/* Set carry flag */
+		/* Increment functions */
+		void INX();
+		void INY();
+		
+		/* OR with accumulator functions */
+		void ORAIMM();
+		void ORAZP();
+		void ORAZPX();
+		void ORABS();
+		void ORABSX();
+		void ORABSY();
+		
+		/* Set flags */
 		void SEC();
 		void SED();
 		void SEI();
@@ -69,31 +92,42 @@ class MOS_6502{
 
 
 #define set_bit(number, x)\
-	 number |= (1 << x);
+	 number |= (1 << x)
 #define clear_bit(number, x)\
-	number &=  ~(1 << x);
+	number &=  ~(1 << x)
 #define toggle_bit(number, x)\
 	number ^= (1 << x);
-	
 #define get_bit(number, x)\
 	((number >> x) & 1)	
 
 #define set_flag(x)\
 	set_bit(P, x)
+#define get_flag(x)\
+	get_bit(P, x)
 #define clear_flag(x)\
 	clear_bit(P, x)
 #define toggle_flag(x)\
 	toggle_bit(P, x)
 
 #define reset_negative_and_zero_flags()\
-	clear_bit(P,FLAG_NEGATIVE)\
+	clear_bit(P,FLAG_NEGATIVE);\
 	clear_bit(P,FLAG_ZERO)
 	
 #define set_negative_and_zero_flags_if_neccessary()\
 	if(A == 0x0)\
-		set_bit(P,FLAG_ZERO)\
+		set_bit(P,FLAG_ZERO);\
 	if(A >= 0x80)\
 		set_bit(P,FLAG_NEGATIVE)
+
+#define refresh_negative_and_zero_flags()\
+	if(A == 0)\
+		set_flag(FLAG_ZERO);\
+	else \
+		clear_flag(FLAG_ZERO);\
+	if(A >= 0x80)\
+		set_flag(FLAG_NEGATIVE);\
+	else \
+		clear_flag(FLAG_NEGATIVE);
 
 /** Using macro it should be faster than using a function call */
 #define CARRY get_bit(P, FLAG_CARRY)
