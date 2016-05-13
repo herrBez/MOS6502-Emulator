@@ -13,7 +13,7 @@ class MOS_6502{
 		unsigned char X;		// Index Register X
 		unsigned char Y;		// Index Register Y
 		unsigned short PC;		// Program Counter
-		unsigned char S;		// Maybe I have to add another bit?
+		unsigned short S;		// From address 0x1FF to 0x100
 		unsigned char P; 		// Process status register
 		unsigned char * memory; // Memory
 		unsigned short lastByte; // Last instruction loaded 
@@ -49,6 +49,18 @@ class MOS_6502{
 		void CLI();
 		void CLV();
 		
+		/* Compare functions with X*/
+		void CPXHelp(unsigned char mem);
+		void CPXIMM();
+		void CPXZP();
+		void CPXABS();
+		
+		/* Compare functions with Y */
+		void CPYHelp(unsigned char mem);
+		void CPYIMM();
+		void CPYZP();
+		void CPYABS();
+		
 		/* Decrement functions */
 		void DEX();
 		void DEY();
@@ -70,10 +82,27 @@ class MOS_6502{
 		void ORABSX();
 		void ORABSY();
 		
+		
+		/* Push on or Pull from stack the process status flag P/Accumulator*/
+		void PHA();
+		void PHP();
+		void PLA();
+		void PLP();
+		
 		/* Set flags */
 		void SEC();
 		void SED();
 		void SEI();
+		
+		/* Transfer Accumulator to index X, Y */
+		void TAX();
+		void TAY();
+		/* Transfer index X, Y to Accumulator */
+		void TXA();
+		void TYA();
+		
+		/* Transfer stack pointer to index X */
+		void TSX();
 		
 	
 
@@ -88,6 +117,7 @@ class MOS_6502{
 #define FLAG_IRQ_DISABLE 2 //IRQ Disable
 #define FLAG_ZERO 1 //Zero flag
 #define FLAG_CARRY 0 //Carry 1 if true
+
 
 
 
@@ -119,12 +149,12 @@ class MOS_6502{
 	if(A >= 0x80)\
 		set_bit(P,FLAG_NEGATIVE)
 
-#define refresh_negative_and_zero_flags()\
-	if(A == 0)\
+#define refresh_negative_and_zero_flags_on_register(reg)\
+	if(reg == 0)\
 		set_flag(FLAG_ZERO);\
 	else \
 		clear_flag(FLAG_ZERO);\
-	if(A >= 0x80)\
+	if(reg >= 0x80)\
 		set_flag(FLAG_NEGATIVE);\
 	else \
 		clear_flag(FLAG_NEGATIVE);
