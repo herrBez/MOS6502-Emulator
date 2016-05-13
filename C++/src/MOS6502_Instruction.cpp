@@ -16,7 +16,11 @@ int MOS_6502::getRelativeOffset(int position){
 
 
 
-
+/******************************************************
+ * 
+ * ADC functions: Add memory to accumulator with carry
+ * 
+ ******************************************************/
 
 /** This instruction affects the accumulator; sets the carry flag
 when the sum of a binary add exceeds 255 or when the sum of a decimal
@@ -40,6 +44,15 @@ void MOS_6502::ADCIMM(){
 	A = (tmp % limit);
 	set_negative_and_zero_flags_if_neccessary();
 }
+
+
+/******************************************************
+ * 
+ * AND functions: AND memory with accumulator
+ * 
+ ******************************************************/
+
+
 /**This instruction affects the accumulator; sets the zero flag
 if the result in the accumulator is 0, otherwise resets the zero flag
 sets the negative flag if the result in the accumulator has bit 7 on,
@@ -55,6 +68,13 @@ void MOS_6502::ANDIMM(){
 	else
 		clear_flag(FLAG_NEGATIVE);
 }
+
+
+/******************************************************
+ * 
+ * Clear functions
+ * 
+ ******************************************************/
 
 /** Clear carry flag */
 void MOS_6502::CLC(){
@@ -77,18 +97,12 @@ void MOS_6502::CLV(){
 }
 
 
-/** CPX functions */
-/*The CPX instruction does not affect any register in the machine;
-it also does not affect the overflow flag.
-It causes the carry to be
-set on if the absolute value of the index register X is equal to or
-greater than the data from memory.
-If the value of the memory is
-greater than the content of the index register X, carry is reset.
-If the results of the subtraction contain a bit 7, then the N flag
-is set, if not, it is reset.
-If the value in memory is equal to the
-value in index register X, the Z flag is set, otherwise it is reset.*/
+
+/******************************************************
+ * 
+ * CPX functions: Compare memory and Index X
+ * 
+ ******************************************************/
 
 void MOS_6502::CPXHelp(unsigned char mem){
 	unsigned char tmp = X - mem;
@@ -114,7 +128,11 @@ void MOS_6502::CPXABS(){
 	CPXHelp(memory[address]);
 }
 
-/** CPY functions */
+/******************************************************
+ * 
+ * CPY functions: Compare memory and Index Y
+ * 
+ ******************************************************/
 void MOS_6502::CPYHelp(unsigned char mem){
 	unsigned char tmp = X - mem;
 	if(X >= mem)
@@ -139,59 +157,93 @@ void MOS_6502::CPYABS(){
 	CPXHelp(memory[address]);
 }
 
-/** Decrement functions */
-/*
- DEX does not affect the carry or overflow flag, 
- it sets the N flag if it has bit 7 on as a result of the decrement,
- * otherwise it resets the N flag;
- * sets the Z flag if X is a 0 as a result of the decrement, otherwise
- * it resets the Z flag
- 
- */
- /* decrement index register X */
+/******************************************************
+ * 
+ * Decrement functions:
+ * 
+ ******************************************************/
+void MOS_6502::DECZP(){
+	refresh_negative_and_zero_flags_on_register(--memory[PC++]);
+}
+
+void MOS_6502::DECZPX(){
+	refresh_negative_and_zero_flags_on_register(--memory[X]);
+}
+void MOS_6502::DECABS(){
+	unsigned short address = memory[PC] << 8 | memory[PC+1];
+	PC += 2;
+	refresh_negative_and_zero_flags_on_register(--memory[address]);
+}
+void MOS_6502::DECABSX(){
+	unsigned short address = memory[PC] << 8 | memory[PC+1];
+	PC += 2;
+	refresh_negative_and_zero_flags_on_register(--memory[address + X]);
+}
+
 void MOS_6502::DEX(){
 	X--;
 	refresh_negative_and_zero_flags_on_register(X);
 }
-/* decrement index register Y */
+
 void MOS_6502::DEY(){
 	Y--;
 	refresh_negative_and_zero_flags_on_register(Y);
 }
 
-void MOS_6502::DECZP(){
-	
-}
-
-void MOS_6502::DECZPX(){
-}
-void MOS_6502::DECABS(){
-}
-void MOS_6502::DECABSX(){
-}
 
 
 
-/** Increment functions */
+/******************************************************
+ * 
+ * Increment functions:
+ * 
+ ******************************************************/
+void MOS_6502::INCZP(){
+	refresh_negative_and_zero_flags_on_register(++memory[PC++]);
+}
+
+void MOS_6502::INCZPX(){
+	refresh_negative_and_zero_flags_on_register(++memory[X]);
+}
+void MOS_6502::INCABS(){
+	unsigned short address = memory[PC] << 8 | memory[PC+1];
+	PC += 2;
+	refresh_negative_and_zero_flags_on_register(++memory[address]);
+}
+void MOS_6502::INCABSX(){
+	unsigned short address = memory[PC] << 8 | memory[PC+1];
+	PC += 2;
+	refresh_negative_and_zero_flags_on_register(++memory[address + X]);
+}
+
 /*
  INX does not affect the carry or overflow flags;
  it sets the N flag if the result of the increment has a one in bit 7, otherwise resets N; 
  sets the Z flag if the result of the increment is 0, otherwise it resets the Z flag.*/
-void MOS_6502::INX(){
+void MOS_6502::INCX(){
 	X++;
 	refresh_negative_and_zero_flags_on_register(X);
 }
 
-void MOS_6502::INY(){
+void MOS_6502::INCY(){
 	Y++;
 	refresh_negative_and_zero_flags_on_register(Y);
 }
 
+/*********************************
+ * NOP - Let's waste some time ;)
+ ********************************/
+void MOS_6502::NOP(){
+	int tmp = A;
+	A += rand();
+	A = tmp;
+}
 /**
  This instruction affects the accumulator; sets the zero flag
 if the result in the accumulator is 0, otherwise resets the zero flag;
 sets the negative flag if the result in the accumulator has bit 7 on,
 otherwise resets the negative flag.*/
+
 
 void MOS_6502::ORAIMM(){
 	A |= memory[PC++];
@@ -212,9 +264,12 @@ void MOS_6502::ORABS(){
 	refresh_negative_and_zero_flags_on_register(A);
 }
 
-/**********************
- *  Stack operations 
- **********************/
+
+/******************************************************
+ * 
+ * Stack functions
+ * 
+ ******************************************************/
 /* Push accumulator on stack */
 void MOS_6502::PHA(){
 	memory[S--] = A;
@@ -249,9 +304,12 @@ void MOS_6502::PLP(){
 	}
 }
 
-/********************
- *  Set functions 
- ********************/
+
+/******************************************************
+ * 
+ * Set functions:
+ * 
+ ******************************************************/
 void MOS_6502::SEC(){
 	set_flag(FLAG_CARRY);
 }
@@ -263,6 +321,8 @@ void MOS_6502::SED(){
 void MOS_6502::SEI(){
 	set_flag(FLAG_IRQ_DISABLE);
 }
+
+
 /*TAX only affects the index register X, does not affect the
   carry or overflow flags.
   * The N flag is set if the resultant value in the index register X has bit 7 on, otherwise N is reset.

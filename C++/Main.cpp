@@ -2,17 +2,24 @@
 
 
 int main(int argc, char * argv[]){
-	int length = 9;
+	int length = 16;
 	unsigned char * game = (unsigned char*) malloc(sizeof(unsigned char) * length);
-	game[0] = 0x38;
-	game[1] = 0xF8;
-	game[2] = 0x78;
-	game[3] = 0x18;
-	game[4] = 0x08;
-	game[5] = 0xD8;
-	game[6] = 0x58;
-	game[7] = 0xB8;
-	game[8] = 0x08;
+	int i = 0;
+	game[i++] = 0x38;
+	game[i++] = 0xF8;
+	game[i++] = 0x78;
+	game[i++] = 0x18;
+	game[i++] = 0x08;
+	game[i++] = 0xD8;
+	game[i++] = 0x58;
+	game[i++] = 0xB8;
+	game[i++] = 0x78;
+	game[i++] = 0x08;
+	game[i++] = 0xE8;
+	game[i++] = 0x88;
+	game[i++] = 0xEA;
+	game[i++] = 0xEA;
+	game[i++] = 0XEA;
 	
 	
 	MOS_6502 m = MOS_6502(0x1000);

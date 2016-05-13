@@ -39,6 +39,12 @@ class MOS_6502{
 		void ExitOnUnrecognizedInstruction();
 		/* ADC functions */
 		void ADCIMM();
+		void ADCZP();
+		void ADCZPX();
+		void ADCABS();
+		void ADCABSX();
+		void ADC$ZPX(); //ADC(ZP,X)
+		void ADCZPY();
 		
 		/* AND functions */
 		void ANDIMM();
@@ -71,8 +77,15 @@ class MOS_6502{
 
 		
 		/* Increment functions */
-		void INX();
-		void INY();
+		void INCZP();
+		void INCZPX();
+		void INCABS();
+		void INCABSX();
+		void INCX();
+		void INCY();
+		
+		/* NOP function */
+		void NOP();
 		
 		/* OR with accumulator functions */
 		void ORAIMM();

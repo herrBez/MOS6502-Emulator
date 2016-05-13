@@ -10,27 +10,63 @@ MOS_6502::MOS_6502(int memory_size) {
 	memory = (unsigned char *) malloc(sizeof(unsigned char) * memory_size);
 	for(int i = 0x0; i < 0x100; i++)
 		instructions[i] = &MOS_6502::ExitOnUnrecognizedInstruction;
+		
 	instructions[0x69] = &MOS_6502::ADCIMM;
+	
+	/************************
+	 *  Clear function
+	 ************************/
 	instructions[0x18] = &MOS_6502::CLC;
 	instructions[0xD8] = &MOS_6502::CLD;
 	instructions[0x58] = &MOS_6502::CLI;
 	instructions[0xB8] = &MOS_6502::CLV;
+	
+	/*************************
+	 *  Decrement functions
+	 *************************/
+	instructions[0xC6] = &MOS_6502::DECZP;
+	instructions[0xD6] = &MOS_6502::DECZPX;
+	instructions[0xCE] = &MOS_6502::DECABS;
+	instructions[0xDE] = &MOS_6502::DECABSX;
+	instructions[0xCA] = &MOS_6502::DEX;
+	instructions[0x88] = &MOS_6502::DEY;
+	
+	/*************************
+	 *  Increment functions
+	 *************************/
+	instructions[0xE6] = &MOS_6502::INCZP;
+	instructions[0xF6] = &MOS_6502::INCZPX;
+	instructions[0xEE] = &MOS_6502::INCABS;
+	instructions[0xFE] = &MOS_6502::INCABSX;
+	instructions[0xE8] = &MOS_6502::INCX;
+	instructions[0xC8] = &MOS_6502::INCY;
+	
+	/****************************
+	 * NOP
+	 ****************************/
+	instructions[0xEA] = &MOS_6502::NOP;
+	/*************************
+	 *  Set functions
+	 *************************/
 	instructions[0x38] = &MOS_6502::SEC;
 	instructions[0xF8] = &MOS_6502::SED;
 	instructions[0x78] = &MOS_6502::SEI;
+	
+	/*************************
+	 * Basic Stack functions 
+	 *************************/
 	instructions[0x48] = &MOS_6502::PHA;
 	instructions[0x08] = &MOS_6502::PHP;
 	instructions[0x68] = &MOS_6502::PLA;
 	instructions[0x28] = &MOS_6502::PLP;
 	
-	#ifdef DEBUG
-	#endif
 }
 
 
 
 MOS_6502::~MOS_6502(){
 	free(memory);
+	printf("\nCleaning up...\n");
 }
 
 
