@@ -34,8 +34,10 @@ class MOS_6502{
 	
 	private:
 		void emulateCycle();
-		int getRelativeOffset(int position);
-		/** FUNCTIONS */
+		inline int getRelativeOffset(int position);
+		/*******************
+		 *  FUNCTIONS 
+		 *******************/
 		void ExitOnUnrecognizedInstruction();
 		/* ADC functions */
 		void ADCIMM();
@@ -47,8 +49,17 @@ class MOS_6502{
 		void ADCZPY();
 		
 		/* AND functions */
+		inline void AND(unsigned char mem);
 		void ANDIMM();
+		void ANDZP();
+		void ANDZPX();
+		void ANDABS();
+		void ANDABSX();
+		void ANDABSY();
+		void AND$ZPX(); //ADC(ZP,X)
+		void ANDZPY();
 		
+				
 		/* Clear flags */
 		void CLC();
 		void CLD();

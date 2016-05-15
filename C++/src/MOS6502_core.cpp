@@ -10,9 +10,21 @@ MOS_6502::MOS_6502(int memory_size) {
 	memory = (unsigned char *) malloc(sizeof(unsigned char) * memory_size);
 	for(int i = 0x0; i < 0x100; i++)
 		instructions[i] = &MOS_6502::ExitOnUnrecognizedInstruction;
-		
-	instructions[0x69] = &MOS_6502::ADCIMM;
-	
+	/******************************
+	 *  Add Accumulator with carry
+	 ******************************/
+	 instructions[0x69] = &MOS_6502::ADCIMM;
+	/********************************
+	 *  AND memory with accumulator
+	 ********************************/
+	instructions[0x29] = &MOS_6502::ANDIMM;
+	instructions[0x25] = &MOS_6502::ANDZP;
+	instructions[0x35] = &MOS_6502::ANDZPX;
+	instructions[0x2D] = &MOS_6502::ANDABS;
+	instructions[0x3D] = &MOS_6502::ANDABSX;
+	instructions[0x39] = &MOS_6502::ANDABSY;
+	instructions[0x21] = &MOS_6502::AND$ZPX;
+	instructions[0x31] = &MOS_6502::ANDZPY;  
 	/************************
 	 *  Clear function
 	 ************************/
@@ -66,7 +78,9 @@ MOS_6502::MOS_6502(int memory_size) {
 
 MOS_6502::~MOS_6502(){
 	free(memory);
+	#ifdef DEBUG
 	printf("\nCleaning up...\n");
+	#endif
 }
 
 

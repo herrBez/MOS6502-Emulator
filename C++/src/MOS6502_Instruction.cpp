@@ -3,7 +3,7 @@
 
 
 /** Branch functions: use signed byte in order to move with an offset */
-int MOS_6502::getRelativeOffset(int position){
+inline int MOS_6502::getRelativeOffset(int position){
 	unsigned char offset = memory[position];
 	int real_offset = offset;
 	if(offset >= 0x80){
@@ -57,16 +57,49 @@ void MOS_6502::ADCIMM(){
 if the result in the accumulator is 0, otherwise resets the zero flag
 sets the negative flag if the result in the accumulator has bit 7 on,
 otherwise resets the negative flag.*/
+inline void MOS_6502::AND(unsigned char mem){
+	A &= mem;
+	refresh_negative_and_zero_flags_on_register(A);
+}
+
 void MOS_6502::ANDIMM(){
-	A &= memory[PC++];
-	if(A == 0)
-		set_flag(FLAG_ZERO);	
-	else 
-		clear_flag(FLAG_ZERO);
-	if(A >= 0x80)
-		set_flag(FLAG_NEGATIVE);
-	else
-		clear_flag(FLAG_NEGATIVE);
+	AND(memory[PC++]);
+}
+
+void MOS_6502::ANDZP(){
+	AND(memory[memory[PC++]]);
+}
+
+void MOS_6502::ANDZPX(){
+	AND(memory[memory[PC++] + X]);
+}
+void MOS_6502::ANDABS(){
+	unsigned short address = (memory[PC] << 8) | memory[PC+1];
+	PC += 2;
+	AND(memory[address]);
+}
+
+void MOS_6502::ANDABSX(){
+	unsigned short address = memory[PC] << 8 | memory[PC+1];
+	PC += 2;
+	address += X;
+	AND(memory[address]);
+}	
+void MOS_6502::ANDABSY(){
+	unsigned short address = (memory[PC] << 8) | memory[PC+1];
+	PC += 2;
+	address += Y;
+	AND(memory[address]);
+}
+void MOS_6502::AND$ZPX() {
+	unsigned short tmp = memory[PC++] + X;
+	unsigned short address = (memory[tmp] << 8) + memory[tmp+1];
+	AND(memory[address]);
+}
+void MOS_6502::ANDZPY(){
+	unsigned short tmp = memory[PC++] + Y;
+	unsigned short address = (memory[tmp] << 8) + memory[tmp+1];
+	AND(memory[address]);
 }
 
 
@@ -273,13 +306,14 @@ void MOS_6502::ORABS(){
 /* Push accumulator on stack */
 void MOS_6502::PHA(){
 	memory[S--] = A;
+	
 	if(S < 0x100){
 		fprintf(stderr, "[PHA]: Out of stack space\n");
 		PC = lastByte + 1;
 	}
 }
 
-
+/* PUSH */
 void MOS_6502::PHP(){
 	memory[S--] = P;
 	if(S < 0x100) {
@@ -288,18 +322,20 @@ void MOS_6502::PHP(){
 	}
 }
 
+/* PULL A */
 void MOS_6502::PLA(){
-	A = memory[S++];
+	A = memory[++S];
 	if(S > 0x1FF) {
-		fprintf(stderr,"[PULL:] Stack too full\n");
+		fprintf(stderr,"[PULL:] Stack empty\n");
 		PC = lastByte + 1;
 	}
 }
 
+/* Pull P */
 void MOS_6502::PLP(){
-	P = memory[S++];
+	P = memory[++S];
 	if(S > 0x1FF) {
-		fprintf(stderr,"[PULL:] Stack too full\n");
+		fprintf(stderr,"[PULL:] Stack empty.\n");
 		PC = lastByte + 1;
 	}
 }

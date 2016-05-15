@@ -17,9 +17,9 @@ int main(int argc, char * argv[]){
 	game[i++] = 0x08;
 	game[i++] = 0xE8;
 	game[i++] = 0x88;
-	game[i++] = 0xEA;
-	game[i++] = 0xEA;
-	game[i++] = 0XEA;
+	game[i++] = 0x68;
+	game[i++] = 0x68;
+	game[i++] = 0X68;
 	
 	
 	MOS_6502 m = MOS_6502(0x1000);
