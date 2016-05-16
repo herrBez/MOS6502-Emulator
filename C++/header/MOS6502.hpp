@@ -40,11 +40,13 @@ class MOS_6502{
 		 *******************/
 		void ExitOnUnrecognizedInstruction();
 		/* ADC functions */
+		inline void ADC(unsigned char mem);
 		void ADCIMM();
 		void ADCZP();
 		void ADCZPX();
 		void ADCABS();
 		void ADCABSX();
+		void ADCABSY();
 		void ADC$ZPX(); //ADC(ZP,X)
 		void ADCZPY();
 		
@@ -59,6 +61,12 @@ class MOS_6502{
 		void AND$ZPX(); //ADC(ZP,X)
 		void ANDZPY();
 		
+		/* ASL functions */
+		void ASLA();
+		void ASLZP();
+		void ASLZPX();
+		void ASLABS();
+		void ASLABSX();
 				
 		/* Clear flags */
 		void CLC();
@@ -67,13 +75,13 @@ class MOS_6502{
 		void CLV();
 		
 		/* Compare functions with X*/
-		void CPXHelp(unsigned char mem);
+		inline void CPXHelp(unsigned char mem);
 		void CPXIMM();
 		void CPXZP();
 		void CPXABS();
 		
 		/* Compare functions with Y */
-		void CPYHelp(unsigned char mem);
+		inline void CPYHelp(unsigned char mem);
 		void CPYIMM();
 		void CPYZP();
 		void CPYABS();

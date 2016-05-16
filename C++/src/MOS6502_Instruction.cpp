@@ -34,15 +34,55 @@ flag is reset.
 The zero flag is set if the accumulator result is 0,
 otherwise the zero flag is reset.*/
 
-void MOS_6502::ADCIMM(){
+inline void MOS_6502::ADC(unsigned char mem) {
 	unsigned short limit = get_flag(FLAG_DECIMAL_MODE) == 1?100:0x100;
-	unsigned short tmp = A + memory[PC++] + CARRY;
+	unsigned short tmp = A + mem + CARRY;
 	clear_bit(P, FLAG_CARRY);
 	reset_negative_and_zero_flags();
 	if(tmp >= limit)
 		set_bit(P, FLAG_CARRY);//Add carry
 	A = (tmp % limit);
-	set_negative_and_zero_flags_if_neccessary();
+	refresh_negative_and_zero_flags_on_register(A);
+}
+
+void MOS_6502::ADCIMM(){
+	ADC(memory[PC++]);
+}
+
+void MOS_6502::ADCZP(){
+	ADC(memory[memory[PC++]]);
+}
+
+void MOS_6502::ADCZPX(){
+	AND(memory[memory[PC++] + X]);
+}
+void MOS_6502::ADCABS(){
+	unsigned short address = (memory[PC] << 8) | memory[PC+1];
+	PC += 2;
+	AND(memory[address]);
+}
+
+void MOS_6502::ADCABSX(){
+	unsigned short address = memory[PC] << 8 | memory[PC+1];
+	PC += 2;
+	address += X;
+	ADC(memory[address]);
+}	
+void MOS_6502::ADCABSY(){
+	unsigned short address = (memory[PC] << 8) | memory[PC+1];
+	PC += 2;
+	address += Y;
+	ADC(memory[address]);
+}
+void MOS_6502::ADC$ZPX() {
+	unsigned short tmp = memory[PC++] + X;
+	unsigned short address = (memory[tmp] << 8) + memory[tmp+1];
+	ADC(memory[address]);
+}
+void MOS_6502::ADCZPY(){
+	unsigned short tmp = memory[PC++] + Y;
+	unsigned short address = (memory[tmp] << 8) + memory[tmp+1];
+	ADC(memory[address]);
 }
 
 
@@ -102,6 +142,37 @@ void MOS_6502::ANDZPY(){
 	AND(memory[address]);
 }
 
+/******************************************************
+ * 
+ * ASL Shift left one bit (Memory or accumulator )
+ * 
+ ******************************************************/
+void MOS_6502::ASLA(){
+	if(A >= 0x80)
+		set_flag(FLAG_CARRY);
+	A = A << 1;
+	refresh_negative_and_zero_flags_on_register(A);
+}
+
+void MOS_6502::ASLZP(){
+	if(memory[memory[PC]] >= 0x80)
+		set_flag(FLAG_CARRY);
+	memory[memory[PC]] <<= 1;
+	refresh_negative_and_zero_flags_on_register(memory[memory[PC]]);
+	PC++;
+}
+void MOS_6502::ASLZPX(){
+	if(memory[memory[PC] + X] >= 0x80)
+		set_flag(FLAG_CARRY);
+	memory[memory[PC] + X] <<= 1;
+	refresh_negative_and_zero_flags_on_register(memory[memory[PC] + X]);
+	PC++;
+}
+void MOS_6502::ASLABS(){
+	
+}
+void MOS_6502::ASLABSX(){
+}
 
 /******************************************************
  * 

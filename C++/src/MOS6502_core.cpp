@@ -13,7 +13,14 @@ MOS_6502::MOS_6502(int memory_size) {
 	/******************************
 	 *  Add Accumulator with carry
 	 ******************************/
-	 instructions[0x69] = &MOS_6502::ADCIMM;
+	instructions[0x69] = &MOS_6502::ADCIMM;
+	instructions[0x65] = &MOS_6502::ADCZP;
+	instructions[0x75] = &MOS_6502::ADCZPX;
+	instructions[0x6D] = &MOS_6502::ADCABS;
+	instructions[0x7D] = &MOS_6502::ADCABSX;
+	instructions[0x79] = &MOS_6502::ADCABSY;
+	instructions[0x61] = &MOS_6502::ADC$ZPX;
+	instructions[0x71] = &MOS_6502::ADCZPY;  
 	/********************************
 	 *  AND memory with accumulator
 	 ********************************/
@@ -25,6 +32,14 @@ MOS_6502::MOS_6502(int memory_size) {
 	instructions[0x39] = &MOS_6502::ANDABSY;
 	instructions[0x21] = &MOS_6502::AND$ZPX;
 	instructions[0x31] = &MOS_6502::ANDZPY;  
+	/*********************************
+	 * ASL Arithmetic shift left
+	 *********************************/
+	instructions[0x0A] = &MOS_6502::ASLA;
+	instructions[0x06] = &MOS_6502::ASLZP;
+	instructions[0x16] = &MOS_6502::ASLZPX;
+	instructions[0x0E] = &MOS_6502::ASLABS;
+	instructions[0x1E] = &MOS_6502::ASLABSX;
 	/************************
 	 *  Clear function
 	 ************************/
