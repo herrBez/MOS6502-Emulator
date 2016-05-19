@@ -35,6 +35,14 @@ class MOS_6502{
 	private:
 		void emulateCycle();
 		inline int getRelativeOffset(int position);
+		inline unsigned short fetchAddressIMM();
+		inline unsigned short fetchAddressZP();
+		inline unsigned short fetchAddressZPX();
+		inline unsigned short fetchAddressABS();
+		inline unsigned short fetchAddressABSX();
+		inline unsigned short fetchAddressABSY();
+		inline unsigned short fetchAddress$ZPX();
+		inline unsigned short fetchAddressZPY();
 		/*******************
 		 *  FUNCTIONS 
 		 *******************/
@@ -62,6 +70,7 @@ class MOS_6502{
 		void ANDZPY();
 		
 		/* ASL functions */
+		inline void ASL(unsigned char * mem);
 		void ASLA();
 		void ASLZP();
 		void ASLZPX();
@@ -93,7 +102,16 @@ class MOS_6502{
 		void DECZPX();
 		void DECABS();
 		void DECABSX();
-
+		/* Exclusive OR functions */
+		inline void EOR(unsigned char mem);
+		void EORIMM();
+		void EORZP();
+		void EORZPX();
+		void EORABS();
+		void EORABSX();
+		void EORABSY();
+		void EOR$ZPX();
+		void EORZPY();
 		
 		/* Increment functions */
 		void INCZP();
@@ -103,16 +121,44 @@ class MOS_6502{
 		void INCX();
 		void INCY();
 		
+		/* Load Accumulator with memory functions*/
+		inline void LDA(unsigned char mem);
+		void LDAIMM();
+		void LDAZP();
+		void LDAZPX();
+		void LDAABS();
+		void LDAABSX();
+		void LDAABSY();
+		void LDA$ZPX();
+		void LDAZPY();
+		
+		/* Load X with memory functions*/
+		inline void LDX(unsigned char mem);
+		void LDXIMM();
+		void LDXZP();
+		void LDXABS();
+		void LDXABSY();
+		void LDXZPY();
+		
+		inline void LDY(unsigned char mem);
+		void LDYIMM();
+		void LDYZP();
+		void LDYZPX();
+		void LDYABS();
+		void LDYABSX();
 		/* NOP function */
 		void NOP();
 		
 		/* OR with accumulator functions */
+		inline void OR(unsigned char mem);
 		void ORAIMM();
 		void ORAZP();
 		void ORAZPX();
-		void ORABS();
-		void ORABSX();
-		void ORABSY();
+		void ORAABS();
+		void ORAABSX();
+		void ORAABSY();
+		void ORA$ZPX();
+		void ORAZPY();
 		
 		
 		/* Push on or Pull from stack the process status flag P/Accumulator*/

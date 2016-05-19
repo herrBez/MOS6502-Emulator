@@ -59,6 +59,17 @@ MOS_6502::MOS_6502(int memory_size) {
 	instructions[0x88] = &MOS_6502::DEY;
 	
 	/*************************
+	 *  Exclusive OR functions
+	 *************************/
+	instructions[0x49] = &MOS_6502::EORIMM;
+	instructions[0x45] = &MOS_6502::EORZP;
+	instructions[0x55] = &MOS_6502::EORZPX;
+	instructions[0x4D] = &MOS_6502::EORABS;
+	instructions[0x5D] = &MOS_6502::EORABSX;
+	instructions[0x59] = &MOS_6502::EORABSY;
+	instructions[0x41] = &MOS_6502::EOR$ZPX;
+	instructions[0x51] = &MOS_6502::EORZPY;
+	/*************************
 	 *  Increment functions
 	 *************************/
 	instructions[0xE6] = &MOS_6502::INCZP;
@@ -67,11 +78,49 @@ MOS_6502::MOS_6502(int memory_size) {
 	instructions[0xFE] = &MOS_6502::INCABSX;
 	instructions[0xE8] = &MOS_6502::INCX;
 	instructions[0xC8] = &MOS_6502::INCY;
+	/********************************
+	 *  Load Accumulator with memory
+	 *******************************/
+	instructions[0xA9] = &MOS_6502::LDAIMM;
+	instructions[0xA5] = &MOS_6502::LDAZP;
+	instructions[0xB5] = &MOS_6502::LDAZPX;
+	instructions[0xAD] = &MOS_6502::LDAABS;
+	instructions[0xBD] = &MOS_6502::LDAABSX;
+	instructions[0xB9] = &MOS_6502::LDAABSY;
+	instructions[0xA1] = &MOS_6502::LDA$ZPX;
+	instructions[0xB1] = &MOS_6502::LDAZPY;
+	/*********************************
+	 *  Load X with memory
+	 *********************************/
+	instructions[0xA2] = &MOS_6502::LDXIMM;
+	instructions[0xA6] = &MOS_6502::LDXZP;
+	instructions[0xB6] = &MOS_6502::LDXZPY;
+	instructions[0xAE] = &MOS_6502::LDXABS;
+	instructions[0xBE] = &MOS_6502::LDXABSY;
+	/*********************************
+	 *  Load Y with memory
+	 *********************************/
+	instructions[0xA0] = &MOS_6502::LDYIMM;
+	instructions[0xA4] = &MOS_6502::LDYZP;
+	instructions[0xB4] = &MOS_6502::LDYZPX;
+	instructions[0xAC] = &MOS_6502::LDXABS;
+	instructions[0xBC] = &MOS_6502::LDYABSX;
 	
 	/****************************
 	 * NOP
 	 ****************************/
 	instructions[0xEA] = &MOS_6502::NOP;
+	/*****************************
+	 * OR functions
+	 *****************************/
+	instructions[0x09] = &MOS_6502::ORAIMM;
+	instructions[0x05] = &MOS_6502::ORAZP;
+	instructions[0x15] = &MOS_6502::ORAZPX;
+	instructions[0x0D] = &MOS_6502::ORAABS;
+	instructions[0x1D] = &MOS_6502::ORAABSX;
+	instructions[0x19] = &MOS_6502::ORAABSY;
+	instructions[0x01] = &MOS_6502::ORA$ZPX;
+	instructions[0x11] = &MOS_6502::ORAZPY;
 	/*************************
 	 *  Set functions
 	 *************************/

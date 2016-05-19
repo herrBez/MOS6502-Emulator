@@ -13,6 +13,35 @@ inline int MOS_6502::getRelativeOffset(int position){
 	return real_offset;
 }
 
+inline unsigned short MOS_6502::fetchAddressIMM(){
+	return PC++;
+}
+
+inline unsigned short MOS_6502::fetchAddressZP(){
+	return memory[PC++];
+}
+inline unsigned short MOS_6502::fetchAddressZPX(){
+	return memory[PC++] + X;
+}
+inline unsigned short MOS_6502::fetchAddressABS(){
+	unsigned short address = (memory[PC] << 8) | memory[PC+1];
+	PC += 2;
+	return address;
+}
+inline unsigned short MOS_6502::fetchAddressABSX(){
+	return fetchAddressABS() + X;
+}
+inline unsigned short MOS_6502::fetchAddressABSY(){
+	return fetchAddressABS() + Y;
+}
+inline unsigned short MOS_6502::fetchAddress$ZPX(){
+	unsigned short tmp = memory[PC++] + X;
+	return (memory[tmp] << 8) + memory[tmp+1];
+}
+inline unsigned short MOS_6502::fetchAddressZPY(){
+	unsigned short tmp = memory[PC++] + Y;
+	return (memory[tmp] << 8) + memory[tmp+1];
+}
 
 
 
@@ -50,39 +79,27 @@ void MOS_6502::ADCIMM(){
 }
 
 void MOS_6502::ADCZP(){
-	ADC(memory[memory[PC++]]);
+	ADC(memory[fetchAddressZP()]);
 }
 
 void MOS_6502::ADCZPX(){
-	AND(memory[memory[PC++] + X]);
+	AND(memory[fetchAddressZPX()]);
 }
 void MOS_6502::ADCABS(){
-	unsigned short address = (memory[PC] << 8) | memory[PC+1];
-	PC += 2;
-	AND(memory[address]);
+	AND(memory[fetchAddressABS()]);
 }
 
 void MOS_6502::ADCABSX(){
-	unsigned short address = memory[PC] << 8 | memory[PC+1];
-	PC += 2;
-	address += X;
-	ADC(memory[address]);
+	ADC(memory[fetchAddressZPX()]);
 }	
 void MOS_6502::ADCABSY(){
-	unsigned short address = (memory[PC] << 8) | memory[PC+1];
-	PC += 2;
-	address += Y;
-	ADC(memory[address]);
+	ADC(memory[fetchAddressABSY()]);
 }
 void MOS_6502::ADC$ZPX() {
-	unsigned short tmp = memory[PC++] + X;
-	unsigned short address = (memory[tmp] << 8) + memory[tmp+1];
-	ADC(memory[address]);
+	ADC(memory[fetchAddress$ZPX()]);
 }
 void MOS_6502::ADCZPY(){
-	unsigned short tmp = memory[PC++] + Y;
-	unsigned short address = (memory[tmp] << 8) + memory[tmp+1];
-	ADC(memory[address]);
+	ADC(memory[fetchAddressZPY()]);
 }
 
 
@@ -107,39 +124,27 @@ void MOS_6502::ANDIMM(){
 }
 
 void MOS_6502::ANDZP(){
-	AND(memory[memory[PC++]]);
+	AND(memory[fetchAddressZP()]);
 }
 
 void MOS_6502::ANDZPX(){
-	AND(memory[memory[PC++] + X]);
+	AND(memory[fetchAddressZPX()]);
 }
 void MOS_6502::ANDABS(){
-	unsigned short address = (memory[PC] << 8) | memory[PC+1];
-	PC += 2;
-	AND(memory[address]);
+	AND(memory[fetchAddressABS()]);
 }
 
 void MOS_6502::ANDABSX(){
-	unsigned short address = memory[PC] << 8 | memory[PC+1];
-	PC += 2;
-	address += X;
-	AND(memory[address]);
+	AND(memory[fetchAddressABSX()]);
 }	
 void MOS_6502::ANDABSY(){
-	unsigned short address = (memory[PC] << 8) | memory[PC+1];
-	PC += 2;
-	address += Y;
-	AND(memory[address]);
+	AND(memory[fetchAddressABSY()]);
 }
 void MOS_6502::AND$ZPX() {
-	unsigned short tmp = memory[PC++] + X;
-	unsigned short address = (memory[tmp] << 8) + memory[tmp+1];
-	AND(memory[address]);
+	AND(memory[fetchAddress$ZPX()]);
 }
 void MOS_6502::ANDZPY(){
-	unsigned short tmp = memory[PC++] + Y;
-	unsigned short address = (memory[tmp] << 8) + memory[tmp+1];
-	AND(memory[address]);
+	AND(memory[fetchAddressZPY()]);
 }
 
 /******************************************************
@@ -147,31 +152,28 @@ void MOS_6502::ANDZPY(){
  * ASL Shift left one bit (Memory or accumulator )
  * 
  ******************************************************/
-void MOS_6502::ASLA(){
-	if(A >= 0x80)
+inline void MOS_6502::ASL(unsigned char * mem){
+	if(*mem >= 0x80)
 		set_flag(FLAG_CARRY);
-	A = A << 1;
-	refresh_negative_and_zero_flags_on_register(A);
+	*mem = *mem << 1;
+	refresh_negative_and_zero_flags_on_register(*mem);
+}
+void MOS_6502::ASLA(){
+	ASL(&A);
 }
 
 void MOS_6502::ASLZP(){
-	if(memory[memory[PC]] >= 0x80)
-		set_flag(FLAG_CARRY);
-	memory[memory[PC]] <<= 1;
-	refresh_negative_and_zero_flags_on_register(memory[memory[PC]]);
-	PC++;
+	ASL(&memory[fetchAddressZP()]);
 }
 void MOS_6502::ASLZPX(){
-	if(memory[memory[PC] + X] >= 0x80)
-		set_flag(FLAG_CARRY);
-	memory[memory[PC] + X] <<= 1;
-	refresh_negative_and_zero_flags_on_register(memory[memory[PC] + X]);
-	PC++;
+	ASL(&memory[fetchAddressZPX()]);
 }
 void MOS_6502::ASLABS(){
+	ASL(&memory[fetchAddressABS()]);
 	
 }
 void MOS_6502::ASLABSX(){
+	ASL(&memory[fetchAddressABSX()]);
 }
 
 /******************************************************
@@ -223,13 +225,11 @@ void MOS_6502::CPXIMM(){
 	CPXHelp(memory[PC++]);
 }
 void MOS_6502::CPXZP(){
-	CPXHelp(memory[memory[PC++]]);
+	CPXHelp(memory[fetchAddressZP()]);
 }
 
 void MOS_6502::CPXABS(){
-	unsigned short address = memory[PC] << 8 | memory[PC+1];
-	PC += 2;
-	CPXHelp(memory[address]);
+	CPXHelp(memory[fetchAddressABS()]);
 }
 
 /******************************************************
@@ -252,13 +252,11 @@ void MOS_6502::CPYIMM(){
 	CPXHelp(memory[PC++]);
 }
 void MOS_6502::CPYZP(){
-	CPXHelp(memory[memory[PC++]]);
+	CPXHelp(memory[fetchAddressZP()]);
 }
 
 void MOS_6502::CPYABS(){
-	unsigned short address = memory[PC] << 8 | memory[PC+1];
-	PC += 2;
-	CPXHelp(memory[address]);
+	CPXHelp(memory[fetchAddressABS()]);
 }
 
 /******************************************************
@@ -285,16 +283,48 @@ void MOS_6502::DECABSX(){
 }
 
 void MOS_6502::DEX(){
-	X--;
-	refresh_negative_and_zero_flags_on_register(X);
+	refresh_negative_and_zero_flags_on_register(--X);
 }
 
 void MOS_6502::DEY(){
-	Y--;
-	refresh_negative_and_zero_flags_on_register(Y);
+	refresh_negative_and_zero_flags_on_register(--Y);
+}
+/******************************************************
+ * 
+ * XOR functions:
+ * 
+ ******************************************************/
+ 
+inline void MOS_6502::EOR(unsigned char mem){
+	A ^= mem;
+	refresh_negative_and_zero_flags_on_register(A);
+}
+void MOS_6502::EORIMM(){
+	EOR(memory[PC++]);
 }
 
+void MOS_6502::EORZP(){
+	EOR(memory[fetchAddressZP()]);
+}
+void MOS_6502::EORZPX(){
+	EOR(memory[fetchAddressZPX()]);	
+}
+void MOS_6502::EORABS(){
+	EOR(memory[fetchAddressABS()]);
+}
 
+void MOS_6502::EORABSX(){
+	EOR(memory[fetchAddressABSX()]);
+}
+void MOS_6502::EORABSY() {
+	EOR(memory[fetchAddressABSY()]);
+}
+void MOS_6502::EOR$ZPX(){
+	EOR(memory[fetchAddress$ZPX()]);
+}
+void MOS_6502::EORZPY(){
+	EOR(memory[fetchAddressZPY()]);
+}
 
 
 /******************************************************
@@ -333,6 +363,86 @@ void MOS_6502::INCY(){
 	Y++;
 	refresh_negative_and_zero_flags_on_register(Y);
 }
+/*********************************
+ * LDA - Load Accumulator with memory
+ ********************************/
+void MOS_6502::LDA(unsigned char mem){
+	A = mem;
+	refresh_negative_and_zero_flags_on_register(A);
+}
+void MOS_6502::LDAIMM(){
+	LDA(memory[PC++]);
+}
+void MOS_6502::LDAZP(){
+	LDA(memory[fetchAddressZP()]);
+}
+void MOS_6502::LDAZPX(){
+	LDA(memory[fetchAddressZPX()]);
+}
+void MOS_6502::LDAABS(){
+	LDA(memory[fetchAddressABS()]);
+}
+void MOS_6502::LDAABSX(){
+	LDA(memory[fetchAddressABSX()]);
+}
+void MOS_6502::LDAABSY(){
+	LDA(memory[fetchAddressABSY()]);
+}
+void MOS_6502::LDA$ZPX(){
+	LDA(memory[fetchAddress$ZPX()]);
+}
+void MOS_6502::LDAZPY(){
+	LDA(memory[fetchAddressZPY()]);
+}
+
+/*********************************
+ * LDX - Load X with memory
+ ********************************/
+inline void MOS_6502::LDX(unsigned char mem){
+	X = mem;
+	refresh_negative_and_zero_flags_on_register(X);
+}
+void MOS_6502::LDXIMM(){
+	LDX(memory[PC++]);
+}
+void MOS_6502::LDXZP(){
+	LDX(memory[fetchAddressZP()]);
+}
+void MOS_6502::LDXABS(){
+	LDX(memory[fetchAddressABS()]);
+}
+void MOS_6502::LDXABSY(){
+	LDX(memory[fetchAddressABSY()]);
+}
+void MOS_6502::LDXZPY(){
+	LDX(memory[fetchAddressZPY()]);
+}
+
+/*********************************
+ * LDX - Load Y with memory
+ ********************************/
+
+inline void MOS_6502::LDY(unsigned char mem){
+	Y = mem;
+	refresh_negative_and_zero_flags_on_register(Y);
+}
+void MOS_6502::LDYIMM(){
+	LDY(memory[PC++]);
+}
+void MOS_6502::LDYZP(){
+	LDY(memory[fetchAddressZP()]);
+}
+void MOS_6502::LDYABS(){
+	LDY(memory[fetchAddressABS()]);
+}
+void MOS_6502::LDYABSX(){
+	LDY(memory[fetchAddressABSX()]);
+}
+void MOS_6502::LDYZPX(){
+	LDY(memory[fetchAddressZPX()]);
+}
+
+
 
 /*********************************
  * NOP - Let's waste some time ;)
@@ -361,11 +471,30 @@ void MOS_6502::ORAZP(){
 void MOS_6502::ORAZPX(){
 	
 }
-void MOS_6502::ORABS(){
+void MOS_6502::ORAABS(){
 	unsigned short address = (memory[PC] << 8) | (memory[PC+1]);
 	PC += 2;
 	A |= memory[address];
 	refresh_negative_and_zero_flags_on_register(A);
+}
+
+void MOS_6502::ORAABSX(){
+	unsigned short address = (memory[PC] << 8) | (memory[PC+1]);
+	PC += 2;
+	A |= memory[address];
+	refresh_negative_and_zero_flags_on_register(A);
+}
+
+void MOS_6502::ORAABSY(){
+	unsigned short address = (memory[PC] << 8) | (memory[PC+1]);
+	PC += 2;
+	A |= memory[address];
+	refresh_negative_and_zero_flags_on_register(A);
+}
+
+void MOS_6502::ORA$ZPX(){
+}
+void MOS_6502::ORAZPY(){
 }
 
 
