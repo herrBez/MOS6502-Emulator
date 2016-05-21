@@ -167,6 +167,22 @@ class MOS_6502{
 		void PLA();
 		void PLP();
 		
+		/* ROL rotate one bit left operation */
+		inline void ROL(unsigned char * mem);
+		void ROLA();
+		void ROLZP();
+		void ROLZPX();
+		void ROLABS();
+		void ROLABSX();
+		
+		/* ROR rotate one bit right operation */
+		inline void ROR(unsigned char * mem);
+		void RORA();
+		void RORZP();
+		void RORZPX();
+		void RORABS();
+		void RORABSX();
+		
 		/* Set flags */
 		void SEC();
 		void SED();
@@ -208,6 +224,8 @@ class MOS_6502{
 #define get_bit(number, x)\
 	((number >> x) & 1)	
 
+#define put_flag(x, bit)\
+	P &= (bit << x)
 #define set_flag(x)\
 	set_bit(P, x)
 #define get_flag(x)\

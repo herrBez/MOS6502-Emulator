@@ -121,6 +121,24 @@ MOS_6502::MOS_6502(int memory_size) {
 	instructions[0x19] = &MOS_6502::ORAABSY;
 	instructions[0x01] = &MOS_6502::ORA$ZPX;
 	instructions[0x11] = &MOS_6502::ORAZPY;
+	/*****************************
+	 * ROL functions
+	 *****************************/
+	instructions[0x2A] = &MOS_6502::ROLA;
+	instructions[0x26] = &MOS_6502::ROLZP;
+	instructions[0x36] = &MOS_6502::ROLZPX;
+	instructions[0x2E] = &MOS_6502::ROLABS;
+	instructions[0x3E] = &MOS_6502::ROLABSX;
+	/*****************************
+	 * ROR functions
+	 *****************************/
+	instructions[0x6A] = &MOS_6502::RORA;
+	instructions[0x66] = &MOS_6502::RORZP;
+	instructions[0x76] = &MOS_6502::RORZPX;
+	instructions[0x6E] = &MOS_6502::RORABS;
+	instructions[0x7E] = &MOS_6502::RORABSX;
+
+	 
 	/*************************
 	 *  Set functions
 	 *************************/

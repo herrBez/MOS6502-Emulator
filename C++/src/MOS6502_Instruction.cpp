@@ -539,8 +539,63 @@ void MOS_6502::PLP(){
 		PC = lastByte + 1;
 	}
 }
+/******************************************************
+ * 
+ * ROL functions:
+ * 
+ ******************************************************/
+inline void MOS_6502::ROL(unsigned char * mem){
+	if(get_bit(*mem, 7))
+		set_flag(FLAG_CARRY);
+	*mem = *mem << 1;
+	refresh_negative_and_zero_flags_on_register(*mem);
+}
+void MOS_6502::ROLA(){
+	ROL(&A);
+}
+void MOS_6502::ROLZP(){
+	ROL(&memory[fetchAddressZP()]);
+}
+void MOS_6502::ROLZPX(){
+		ROL(&memory[fetchAddressZPX()]);
+}
+
+void MOS_6502::ROLABS(){
+		ROL(&memory[fetchAddressABS()]);
+}
+void MOS_6502::ROLABSX(){
+		ROL(&memory[fetchAddressABSX()]);
+}
 
 
+/******************************************************
+ * 
+ * ROR functions:
+ * 
+ ******************************************************/
+inline void MOS_6502::ROR(unsigned char * mem){
+	unsigned char input_carry = CARRY;
+	put_flag(FLAG_CARRY, get_bit(*mem, 0));
+	*mem = ((*mem) >> 1);
+	*mem |= (input_carry << 7);
+	refresh_negative_and_zero_flags_on_register(*mem);
+}
+void MOS_6502::RORA(){
+	ROR(&A);
+}
+void MOS_6502::RORZP(){
+	ROR(&memory[fetchAddressZP()]);
+}
+void MOS_6502::RORZPX(){
+	ROR(&memory[fetchAddressZPX()]);
+}
+
+void MOS_6502::RORABS(){
+	ROR(&memory[fetchAddressABS()]);
+}
+void MOS_6502::RORABSX(){
+	ROR(&memory[fetchAddressABSX()]);
+}
 /******************************************************
  * 
  * Set functions:
@@ -591,6 +646,6 @@ void MOS_6502::TSX(){
 
 /** */
 void MOS_6502::ExitOnUnrecognizedInstruction(){
-	fprintf(stderr, "Unrecognized Instruction %d. Exit ...\n", memory[PC]);
+	fprintf(stderr, "Unrecognized (or not yet supported ) Instruction %d. Exit ...\n", memory[PC]);
 	PC = lastByte; /* In order to exit gracefully */
 }
