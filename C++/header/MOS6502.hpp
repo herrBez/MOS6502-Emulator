@@ -2,7 +2,7 @@
 #define __MOS_6502__H__
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 /**
  * 
  * 
@@ -161,6 +161,7 @@ class MOS_6502{
 		void ORAZPY();
 		
 		
+		
 		/* Push on or Pull from stack the process status flag P/Accumulator*/
 		void PHA();
 		void PHP();
@@ -183,6 +184,16 @@ class MOS_6502{
 		void RORABS();
 		void RORABSX();
 		
+		/* SBC Subtract memory from accumulator with borrow */
+		inline void SBC(unsigned char mem);
+		void SBCIMM();
+		void SBCZP();
+		void SBCZPX();
+		void SBCABS();
+		void SBCABSX();
+		void SBCABSY();
+		void SBC$ZPX();
+		void SBCZPY();
 		/* Set flags */
 		void SEC();
 		void SED();

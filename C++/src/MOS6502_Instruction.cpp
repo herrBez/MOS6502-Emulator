@@ -457,44 +457,38 @@ void MOS_6502::NOP(){
 if the result in the accumulator is 0, otherwise resets the zero flag;
 sets the negative flag if the result in the accumulator has bit 7 on,
 otherwise resets the negative flag.*/
-
+inline void MOS_6502::OR(unsigned char mem){
+	A |= mem;
+	refresh_negative_and_zero_flags_on_register(A);
+}
 
 void MOS_6502::ORAIMM(){
-	A |= memory[PC++];
-	refresh_negative_and_zero_flags_on_register(A);
+	OR(memory[fetchAddressIMM()]);
 }
 
 void MOS_6502::ORAZP(){
-	A |= memory[memory[PC++]];
-	refresh_negative_and_zero_flags_on_register(A);
+	OR(memory[fetchAddressZP()]);
 }
 void MOS_6502::ORAZPX(){
-	
+	OR(memory[fetchAddressZPX()]);
 }
 void MOS_6502::ORAABS(){
-	unsigned short address = (memory[PC] << 8) | (memory[PC+1]);
-	PC += 2;
-	A |= memory[address];
-	refresh_negative_and_zero_flags_on_register(A);
+	OR(memory[fetchAddressABS()]);
 }
 
 void MOS_6502::ORAABSX(){
-	unsigned short address = (memory[PC] << 8) | (memory[PC+1]);
-	PC += 2;
-	A |= memory[address];
-	refresh_negative_and_zero_flags_on_register(A);
+	OR(memory[fetchAddressABSX()]);
 }
 
 void MOS_6502::ORAABSY(){
-	unsigned short address = (memory[PC] << 8) | (memory[PC+1]);
-	PC += 2;
-	A |= memory[address];
-	refresh_negative_and_zero_flags_on_register(A);
+	OR(memory[fetchAddressABSY()]);
 }
 
 void MOS_6502::ORA$ZPX(){
+	OR(memory[fetchAddress$ZPX()]);
 }
 void MOS_6502::ORAZPY(){
+	OR(memory[fetchAddressZPY()]);
 }
 
 
@@ -596,6 +590,55 @@ void MOS_6502::RORABS(){
 void MOS_6502::RORABSX(){
 	ROR(&memory[fetchAddressABSX()]);
 }
+/******************************************************
+ * 
+ * SBC functions:
+ * 
+ ******************************************************/
+inline void MOS_6502::SBC(unsigned char mem){
+	unsigned char twos_complement_of_mem = mem ^ 0xFF;
+	twos_complement_of_mem += CARRY;
+	unsigned short tmp = A + twos_complement_of_mem;
+	if(tmp > 0xFF) {
+		set_flag(FLAG_CARRY);
+	}
+	else {
+		clear_flag(FLAG_CARRY);
+	}
+	A = (unsigned char) (tmp % 0x100);
+	if(A >= 127 || ((char)A) < -127) {
+		set_flag(FLAG_OVERFLOW);
+	}
+	else
+		clear_flag(FLAG_OVERFLOW);
+	refresh_negative_and_zero_flags_on_register(A);
+		
+}
+void MOS_6502::SBCIMM(){
+	SBC(memory[fetchAddressIMM()]);
+}
+void MOS_6502::SBCZP() {
+	SBC(memory[fetchAddressZP()]);
+}
+void MOS_6502::SBCZPX() {
+	SBC(memory[fetchAddressZPX()]);
+}
+void MOS_6502::SBCABS(){
+	SBC(memory[fetchAddressABS()]);
+}
+void MOS_6502::SBCABSX(){
+	SBC(memory[fetchAddressABSX()]);
+}
+void MOS_6502::SBCABSY(){
+	SBC(memory[fetchAddressABSY()]);
+}
+void MOS_6502::SBC$ZPX() {
+	SBC(memory[fetchAddress$ZPX()]);
+}
+void MOS_6502::SBCZPY(){
+	SBC(memory[fetchAddressZPY()]);
+}
+
 /******************************************************
  * 
  * Set functions:

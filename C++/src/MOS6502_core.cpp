@@ -137,7 +137,17 @@ MOS_6502::MOS_6502(int memory_size) {
 	instructions[0x76] = &MOS_6502::RORZPX;
 	instructions[0x6E] = &MOS_6502::RORABS;
 	instructions[0x7E] = &MOS_6502::RORABSX;
-
+	/*****************************
+	 * SBC functions
+	 *****************************/
+	instructions[0xE9] = &MOS_6502::SBCIMM;
+	instructions[0xE5] = &MOS_6502::SBCZP;
+	instructions[0xF5] = &MOS_6502::SBCZPX;
+	instructions[0xED] = &MOS_6502::SBCABS;
+	instructions[0xFD] = &MOS_6502::SBCABSX;
+	instructions[0xF9] = &MOS_6502::SBCABSY;
+	instructions[0xE1] = &MOS_6502::SBC$ZPX;
+	instructions[0xF1] = &MOS_6502::SBCZPY;
 	 
 	/*************************
 	 *  Set functions

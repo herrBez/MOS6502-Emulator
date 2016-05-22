@@ -1,0 +1,11 @@
+; Syntax rules
+; Only 1 instruction per line
+; No spaces
+; the character is a comment
+EA
+EA
+EA
+EA
+EA
+EA
+EA
