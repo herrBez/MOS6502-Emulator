@@ -177,6 +177,66 @@ void MOS_6502::ASLABSX(){
 }
 
 /******************************************************
+ *
+ * Branch functions
+ *
+ ******************************************************/
+
+inline void MOS_6502::JumpRelative(){
+	PC = PC + 1 + memory[PC];
+}
+
+void MOS_6502::BCC(){
+	if(get_flag(FLAG_CARRY) == 0) //Carry clear
+		JumpRelative(); 
+	else 
+		PC++;
+}
+void MOS_6502::BCS(){
+	if(get_flag(FLAG_CARRY) == 1)
+		JumpRelative();
+	else
+		PC++;
+}
+void MOS_6502::BEQ(){
+	if(get_flag(FLAG_ZERO) == 1)
+		JumpRelative();
+	else
+		PC++;
+}
+void MOS_6502::BMI(){
+	if(get_flag(FLAG_NEGATIVE) == 1)
+		JumpRelative();
+	else
+		PC++;
+}
+
+void MOS_6502::BNE(){
+	if(get_flag(FLAG_ZERO) == 0)
+		JumpRelative();
+	else
+		PC++;
+}
+void MOS_6502::BPL(){
+	if(get_flag(FLAG_NEGATIVE) == 0)
+		JumpRelative();
+	else
+		PC++;
+}
+void MOS_6502::BVC(){
+	if(get_flag(FLAG_OVERFLOW) == 0)
+		JumpRelative();
+	else
+		PC++;
+}
+void MOS_6502::BVS(){
+	if(get_flag(FLAG_OVERFLOW) == 1)
+		JumpRelative();
+	else
+		PC++;
+}
+
+/******************************************************
  * 
  * Clear functions
  * 
@@ -449,7 +509,7 @@ void MOS_6502::LDYZPX(){
  ********************************/
 void MOS_6502::NOP(){
 	int tmp = A;
-	A += rand();
+	A *= rand();
 	A = tmp;
 }
 /**

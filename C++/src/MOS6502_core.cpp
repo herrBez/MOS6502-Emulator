@@ -40,6 +40,23 @@ MOS_6502::MOS_6502(int memory_size) {
 	instructions[0x16] = &MOS_6502::ASLZPX;
 	instructions[0x0E] = &MOS_6502::ASLABS;
 	instructions[0x1E] = &MOS_6502::ASLABSX;
+	
+	/***********************************
+	 * (Relative) Branch functions 
+	 ***********************************/
+	instructions[0x90] = &MOS_6502::BCC;
+	instructions[0xB0] = &MOS_6502::BCS;
+	instructions[0xF0] = &MOS_6502::BEQ;
+	instructions[0x30] = &MOS_6502::BMI;
+	instructions[0xD0] = &MOS_6502::BNE;
+	instructions[0x10] = &MOS_6502::BPL;
+	instructions[0x50] = &MOS_6502::BVC;
+	instructions[0x70] = &MOS_6502::BVS;
+	
+	
+	
+	
+	
 	/************************
 	 *  Clear function
 	 ************************/

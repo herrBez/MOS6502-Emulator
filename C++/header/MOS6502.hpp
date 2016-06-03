@@ -76,7 +76,16 @@ class MOS_6502{
 		void ASLZPX();
 		void ASLABS();
 		void ASLABSX();
-				
+		/* Branch functions */
+		inline void JumpRelative();
+		void BCC();
+		void BCS();
+		void BEQ();
+		void BMI();
+		void BNE();
+		void BPL();
+		void BVC();
+		void BVS();		
 		/* Clear flags */
 		void CLC();
 		void CLD();
