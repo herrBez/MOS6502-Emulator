@@ -13,7 +13,7 @@ class MOS_6502{
 		unsigned char X;		// Index Register X
 		unsigned char Y;		// Index Register Y
 		unsigned short PC;		// Program Counter
-		unsigned short S;		// From address 0x1FF to 0x100
+		unsigned short S;		// Stack Poitner - From address 0x1FF to 0x100
 		unsigned char P; 		// Process status register
 		unsigned char * memory; // Memory
 		unsigned short lastByte; // Last instruction loaded 
@@ -145,16 +145,18 @@ class MOS_6502{
 		inline void LDX(unsigned char mem);
 		void LDXIMM();
 		void LDXZP();
+		void LDXZPY();
 		void LDXABS();
 		void LDXABSY();
-		void LDXZPY();
 		
+		/* Load Y with memory functions */
 		inline void LDY(unsigned char mem);
 		void LDYIMM();
 		void LDYZP();
 		void LDYZPX();
 		void LDYABS();
 		void LDYABSX();
+		
 		/* NOP function */
 		void NOP();
 		
@@ -217,6 +219,8 @@ class MOS_6502{
 		
 		/* Transfer stack pointer to index X */
 		void TSX();
+		/* Transfer X index to stack pointer */
+		void TXS();
 		
 	
 

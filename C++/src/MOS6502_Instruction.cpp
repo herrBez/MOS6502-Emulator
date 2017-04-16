@@ -747,6 +747,10 @@ void MOS_6502::TSX(){
 	refresh_negative_and_zero_flags_on_register(X);
 }
 
+void MOS_6502::TXS(){
+	S = X;
+}
+
 /** */
 void MOS_6502::ExitOnUnrecognizedInstruction(){
 	fprintf(stderr, "Unrecognized (or not yet supported ) Instruction %d. Exit ...\n", memory[PC]);
