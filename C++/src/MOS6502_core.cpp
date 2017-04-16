@@ -53,10 +53,6 @@ MOS_6502::MOS_6502(int memory_size) {
 	instructions[0x50] = &MOS_6502::BVC;
 	instructions[0x70] = &MOS_6502::BVS;
 	
-	
-	
-	
-	
 	/************************
 	 *  Clear function
 	 ************************/
@@ -181,6 +177,15 @@ MOS_6502::MOS_6502(int memory_size) {
 	instructions[0x68] = &MOS_6502::PLA;
 	instructions[0x28] = &MOS_6502::PLP;
 	
+	/*************************
+	 * Transfer functions
+	 *************************/
+	instructions[0xAA] = &MOS_6502::TAX;
+	instructions[0xA8] = &MOS_6502::TAY;
+	instructions[0xBA] = &MOS_6502::TSX;
+	instructions[0x8A] = &MOS_6502::TXA;
+	instructions[0x9A] = &MOS_6502::TXS;
+	instructions[0x98] = &MOS_6502::TYA;
 }
 
 
