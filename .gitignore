@@ -33,3 +33,12 @@
 
 #Don't push executable -> Main
 */Main
+
+#Ada gitignore
+# Object file
+*.o
+
+# Ada Library Information
+*.ali
+
+obj/
