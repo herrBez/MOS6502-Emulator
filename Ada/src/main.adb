@@ -12,10 +12,10 @@ begin
 		Put(" <input-file> ");
 		New_Line;
 	else
-		
-		Print_Status(Emulator);
-		Load_Game_Into_Memory(Emulator, Game);
-		Emulate_Cycle(Emulator);
-		Print_Status(Emulator);
+		Game := Read_File(Argument(1));
+		--~ Print_Status(Emulator);
+		--~ Load_Game_Into_Memory(Emulator, Game);
+		--~ Emulate_Cycle(Emulator);
+		--~ Print_Status(Emulator);
 	end if;
 end Main;

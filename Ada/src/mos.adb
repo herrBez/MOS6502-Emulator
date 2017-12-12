@@ -20,8 +20,26 @@ package body MOS is
 		Print_Memory(This, This.PC-2, This.PC+2);
 		Put_Line("=== End ===");
 	end Print_Status;
+	
+	function Read_File(File_Name : String) return Game_T is
+		File : File_Type;
+		Game : Game_T(0..1) := (others => 0);
+		s : Unbounded_String;
+		begin
+		Open(File => File,
+			Mode => In_File,
+			Name => File_Name);
+		Put("Opened");
+		loop
+			exit when End_Of_File (File);
+			s := To_Unbounded_String(Get_Line (File));
+			Put(Integer'Value(To_String(s)));
+		end loop;
+		Close (File);
+		return Game;
+	end Read_File;
 
-
+	
 	-- Print Memory from IntervalStart to Interval End
 	procedure Print_Memory (This : in MOS_T;
 						  Interval_Start : in Short_T;

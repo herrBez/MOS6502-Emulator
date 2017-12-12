@@ -1,5 +1,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package MOS is
 	type Byte_T is mod 2**8; --[0,255]
@@ -45,12 +46,14 @@ package MOS is
 	procedure Emulate_Cycle (This : in out MOS_T);
 	procedure Main_Loop (This : in MOS_T);
 	
-
+	function Read_File(File_Name : String) return Game_T;
+	
 	type Fun is access procedure(This : in out MOS_T);
 	-- This low level debug functions must be only accessible withing the package
 	private
 	procedure Put_Hex(Num : in Integer);
 	procedure Put_Register(Name : in String; Val : in Integer);
+	
 
 	procedure And_Imm(This : in out MOS_T);
 
