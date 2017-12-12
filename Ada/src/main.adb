@@ -6,10 +6,16 @@ procedure Main is
 	Game : Game_T(0..1) := (16#30#, 16#30#);
 	Emulator : MOS_T;
 begin
-	Put(Command_Name);
-	Put(Argument_Count);
-	PrintStatus(Emulator);
-	LoadGameIntoMemory(Emulator, Game);
-	EmulateCycle(Emulator);
-	PrintStatus(Emulator);
+	if Argument_Count < 1 then
+		Put("Usage: ");
+		Put(Command_Name);
+		Put(" <input-file> ");
+		New_Line;
+	else
+		
+		Print_Status(Emulator);
+		Load_Game_Into_Memory(Emulator, Game);
+		Emulate_Cycle(Emulator);
+		Print_Status(Emulator);
+	end if;
 end Main;

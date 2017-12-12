@@ -34,23 +34,24 @@ package MOS is
 
 	-- type MOS_T_REF is access all MOS_T'Class;
 
-	procedure LoadGameIntoMemory ( This : in out MOS_T;
+	procedure Load_Game_Into_Memory ( This : in out MOS_T;
 								  Game : in Game_T);
-	procedure PrintStatus (This : in MOS_T);
-	procedure PrintMemory (This : in MOS_T;
-						  IntervalStart : in Short_T;
-						  IntervalEnd : in Short_T);
+	procedure Print_Status (This : in MOS_T);
+	procedure Print_Memory (This : in MOS_T;
+							Interval_Start : in Short_T;
+							Interval_End : in Short_T);
 
 
-	procedure EmulateCycle (This : in out MOS_T);
-	procedure MainLoop (This : in MOS_T);
+	procedure Emulate_Cycle (This : in out MOS_T);
+	procedure Main_Loop (This : in MOS_T);
+	
 
 	type Fun is access procedure(This : in out MOS_T);
 	-- This low level debug functions must be only accessible withing the package
 	private
-	procedure PutHex(Num : in Integer);
-	procedure PutRegister(Name : in String; Val : in Integer);
+	procedure Put_Hex(Num : in Integer);
+	procedure Put_Register(Name : in String; Val : in Integer);
 
-	procedure AndImm(This : in out MOS_T);
+	procedure And_Imm(This : in out MOS_T);
 
 end MOS;

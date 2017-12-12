@@ -1,75 +1,75 @@
 package body MOS is
    -- Load Game into Memory
-	procedure LoadGameIntoMemory(This : in out MOS_T;
+	procedure Load_Game_Into_Memory(This : in out MOS_T;
 								Game : in Game_T) is
 	I : Short_T := This.PC;
 	begin
 		for J in Game'Range loop
 		 This.Mem(I+J) := Game(J);
 		end loop;
-	end LoadGameIntoMemory;
+	end Load_Game_Into_Memory;
 
-	procedure PrintStatus(This : in MOS_T) is
+	procedure Print_Status(This : in MOS_T) is
 	begin
 		Put_Line("=== Status ===");
-		PutRegister("A", Integer(This.A));
-		PutRegister("X", Integer(This.X));
-		PutRegister("Y", Integer(This.Y));
-		PutRegister("PC", Integer(This.PC));
-		PutRegister("S", Integer(This.S));
-		PrintMemory(This, This.PC-2, This.PC+2);
+		Put_Register("A", Integer(This.A));
+		Put_Register("X", Integer(This.X));
+		Put_Register("Y", Integer(This.Y));
+		Put_Register("PC", Integer(This.PC));
+		Put_Register("S", Integer(This.S));
+		Print_Memory(This, This.PC-2, This.PC+2);
 		Put_Line("=== End ===");
-	end PrintStatus;
+	end Print_Status;
 
 
 	-- Print Memory from IntervalStart to Interval End
-	procedure PrintMemory (This : in MOS_T;
-						  IntervalStart : in Short_T;
-						  IntervalEnd : in Short_T) is
+	procedure Print_Memory (This : in MOS_T;
+						  Interval_Start : in Short_T;
+						  Interval_End : in Short_T) is
 	begin
-		for K in IntervalStart..IntervalEnd loop
+		for K in Interval_Start..Interval_End loop
 			Put("Mem[");
-			PutHex(Integer(K));
+			Put_Hex(Integer(K));
 			Put("] = ");
-			PutHex(Integer(This.Mem(K)));
+			Put_Hex(Integer(This.Mem(K)));
 			New_Line;
 		end loop;
-	end PrintMemory;
+	end Print_Memory;
 
-	procedure PutHex(Num : in Integer) is
+	procedure Put_Hex(Num : in Integer) is
 	begin
 		Put(Num, Base => 16);
-	end PutHex;
+	end Put_Hex;
 
-	procedure PutRegister(Name : in String; Val : in Integer) is
+	procedure Put_Register(Name : in String; Val : in Integer) is
 	begin
 		Put(Name);
-		PutHex(Val);
+		Put_Hex(Val);
 		New_Line;
-	end PutRegister;
+	end Put_Register;
 
 
 
-	procedure EmulateCycle (This : in out MOS_T) is
+	procedure Emulate_Cycle (This : in out MOS_T) is
 		opcode : Byte_T := This.Mem(This.PC);
 	begin
 		-- Debug information
 		Put_Line("Opcode is ");
-		PutHex(Integer(opcode));
+		Put_Hex(Integer(opcode));
 		New_Line;
 		This.PC := This.PC + 1;
-	end EmulateCycle;
+	end Emulate_Cycle;
 
-	procedure MainLoop (This : in MOS_T) is
+	procedure Main_Loop (This : in MOS_T) is
 
 	begin
 
 		null;
-	end MainLoop;
+	end Main_Loop;
 
-	procedure AndImm(This : in out MOS_T) is
+	procedure And_Imm(This : in out MOS_T) is
 	begin
 		null;
-	end AndImm;
+	end And_Imm;
 
 end MOS;
