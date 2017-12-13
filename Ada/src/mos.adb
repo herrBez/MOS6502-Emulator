@@ -23,8 +23,9 @@ package body MOS is
 	
 	function Read_File(File_Name : String) return Game_T is
 		File : File_Type;
-		Game : Game_T(0..1) := (others => 0);
+		Game : Game_T(0..100) := (others => 0);
 		s : Unbounded_String;
+		I : Short_T := 0;
 		begin
 		Open(File => File,
 			Mode => In_File,
@@ -34,6 +35,8 @@ package body MOS is
 			exit when End_Of_File (File);
 			s := To_Unbounded_String(Get_Line (File));
 			Put(Integer'Value(To_String(s)));
+			Game(I) := Byte_T(Integer'Value(To_String(s)));
+			I := I + 1;
 		end loop;
 		Close (File);
 		return Game;
