@@ -3,7 +3,7 @@ with mos; use mos;
 with Ada.Command_Line; use Ada.Command_Line;
 
 procedure Main is
-	Game : Game_T(0..100);
+	Program : Program_T(0..100);
 	Emulator : MOS_T;
 begin
 	if Argument_Count < 1 then
@@ -12,9 +12,9 @@ begin
 		Put(" <input-file> ");
 		New_Line;
 	else
-		Game := Read_File(Argument(1));
+		Program := Read_File(Argument(1));
 		Print_Status(Emulator);
-		Load_Game_Into_Memory(Emulator, Game);
+		Load_Program_Into_Memory(Emulator, Program);
 		Emulate_Cycle(Emulator);
 		Print_Status(Emulator);
 	end if;

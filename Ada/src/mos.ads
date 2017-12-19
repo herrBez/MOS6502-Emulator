@@ -13,7 +13,7 @@ package MOS is
 	-- otherwise an exception will be thrown. Thank You Ada :)
 	type StackPointer_T is range 16#100#..16#1FF#;
 
-	type Game_T is array(Short_T range <>) of Byte_T;
+	type Program_T is array(Short_T range <>) of Byte_T;
 	-- Initializing RAM
 	type Ram_T is array(Short_T range <>) of Byte_T;
 	-- declare your program here. Now it is static
@@ -35,8 +35,8 @@ package MOS is
 
 	-- type MOS_T_REF is access all MOS_T'Class;
 
-	procedure Load_Game_Into_Memory ( This : in out MOS_T;
-								  Game : in Game_T);
+	procedure Load_Program_Into_Memory ( This : in out MOS_T;
+								  Program : in Program_T);
 	procedure Print_Status (This : in MOS_T);
 	procedure Print_Memory (This : in MOS_T;
 							Interval_Start : in Short_T;
@@ -46,7 +46,7 @@ package MOS is
 	procedure Emulate_Cycle (This : in out MOS_T);
 	procedure Main_Loop (This : in MOS_T);
 	
-	function Read_File(File_Name : String) return Game_T;
+	function Read_File(File_Name : String) return Program_T;
 	
 	type Fun is access procedure(This : in out MOS_T);
 	-- This low level debug functions must be only accessible withing the package

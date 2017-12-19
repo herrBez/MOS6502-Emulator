@@ -1,13 +1,13 @@
 package body MOS is
-   -- Load Game into Memory
-	procedure Load_Game_Into_Memory(This : in out MOS_T;
-								Game : in Game_T) is
+   -- Load Program into Memory
+	procedure Load_Program_Into_Memory(This : in out MOS_T;
+								Program : in Program_T) is
 	I : Short_T := This.PC;
 	begin
-		for J in Game'Range loop
-		 This.Mem(I+J) := Game(J);
+		for J in Program'Range loop
+		 This.Mem(I+J) := Program(J);
 		end loop;
-	end Load_Game_Into_Memory;
+	end Load_Program_Into_Memory;
 
 	procedure Print_Status(This : in MOS_T) is
 	begin
@@ -21,9 +21,9 @@ package body MOS is
 		Put_Line("=== End ===");
 	end Print_Status;
 	
-	function Read_File(File_Name : String) return Game_T is
+	function Read_File(File_Name : String) return Program_T is
 		File : File_Type;
-		Game : Game_T(0..100) := (others => 0);
+		Program : Program_T(0..100) := (others => 0);
 		s : Unbounded_String;
 		I : Short_T := 0;
 		begin
@@ -35,11 +35,11 @@ package body MOS is
 			exit when End_Of_File (File);
 			s := To_Unbounded_String(Get_Line (File));
 			Put(Integer'Value(To_String(s)));
-			Game(I) := Byte_T(Integer'Value(To_String(s)));
+			Program(I) := Byte_T(Integer'Value(To_String(s)));
 			I := I + 1;
 		end loop;
 		Close (File);
-		return Game;
+		return Program;
 	end Read_File;
 
 	
