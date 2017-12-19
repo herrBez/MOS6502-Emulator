@@ -1,6 +1,11 @@
 with Ada.Text_IO; use Ada.Text_IO;
-with mos; use mos;
+with Mos; use Mos;
 with Ada.Command_Line; use Ada.Command_Line;
+with Instruction; use Instruction;
+with Main_Loop; use Main_Loop;
+
+
+
 
 procedure Main is
 	Program : Program_T(0..100);
@@ -13,9 +18,7 @@ begin
 		New_Line;
 	else
 		Program := Read_File(Argument(1));
-		Print_Status(Emulator);
 		Load_Program_Into_Memory(Emulator, Program);
-		Emulate_Cycle(Emulator);
-		Print_Status(Emulator);
+		Main_Loop_f(Emulator, Initialize_Instruction_Table);
 	end if;
 end Main;

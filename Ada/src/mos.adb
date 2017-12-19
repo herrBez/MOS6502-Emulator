@@ -73,24 +73,16 @@ package body MOS is
 
 	procedure Emulate_Cycle (This : in out MOS_T) is
 		opcode : Byte_T := This.Mem(This.PC);
-	begin
+    begin
 		-- Debug information
 		Put_Line("Opcode is ");
 		Put_Hex(Integer(opcode));
 		New_Line;
-		This.PC := This.PC + 1;
+		This.PC := This.PC + 2;
 	end Emulate_Cycle;
 
-	procedure Main_Loop (This : in MOS_T) is
+	
 
-	begin
 
-		null;
-	end Main_Loop;
-
-	procedure And_Imm(This : in out MOS_T) is
-	begin
-		null;
-	end And_Imm;
 
 end MOS;

@@ -2,6 +2,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
+
 package MOS is
 	type Byte_T is mod 2**8; --[0,255]
 	type Short_T is mod 2**16; -- 2 Byte
@@ -16,10 +17,7 @@ package MOS is
 	type Program_T is array(Short_T range <>) of Byte_T;
 	-- Initializing RAM
 	type Ram_T is array(Short_T range <>) of Byte_T;
-	-- declare your program here. Now it is static
-	-- TODO read from file
-
-
+	
 	type MOS_T is tagged
 
 	record
@@ -32,29 +30,32 @@ package MOS is
 		S  : StackPointer_T := 16#1FF#; -- Stack Pointer from 0x1FF to 0x100
 		Mem : Ram_T(0..MOS_MAX_MEMORY-1) := (others => 0);
 	end record;
+	
+	
+
 
 	-- type MOS_T_REF is access all MOS_T'Class;
 
 	procedure Load_Program_Into_Memory ( This : in out MOS_T;
 								  Program : in Program_T);
-	procedure Print_Status (This : in MOS_T);
+	
+	
+	function Read_File(File_Name : String) return Program_T;
+    procedure Put_Hex(Num : in Integer);
+    	procedure Emulate_Cycle (This : in out MOS_T);
+    procedure Print_Status (This : in MOS_T);
 	procedure Print_Memory (This : in MOS_T;
 							Interval_Start : in Short_T;
 							Interval_End : in Short_T);
-
-
-	procedure Emulate_Cycle (This : in out MOS_T);
-	procedure Main_Loop (This : in MOS_T);
-	
-	function Read_File(File_Name : String) return Program_T;
-	
-	type Fun is access procedure(This : in out MOS_T);
-	-- This low level debug functions must be only accessible withing the package
-	private
-	procedure Put_Hex(Num : in Integer);
 	procedure Put_Register(Name : in String; Val : in Integer);
+
+	-- This low level/debug functions must be only accessible withing the package
+	private
+	-----------------------------------------
+	-- Debug Functions
+	-----------------------------------------
+	
 	
 
-	procedure And_Imm(This : in out MOS_T);
 
 end MOS;
