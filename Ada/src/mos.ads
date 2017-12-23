@@ -43,7 +43,6 @@ package MOS is
 	
 	
     procedure Put_Hex(Num : in Integer);
-    	procedure Emulate_Cycle (This : in out MOS_T);
     procedure Print_Status (This : in MOS_T);
 	procedure Print_Memory (This : in MOS_T;
 							Interval_Start : in Short_T;
