@@ -1,4 +1,5 @@
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Integer_Text_Io; use Ada.Integer_Text_Io;
 with MOS; use MOS;
 with Instruction; use Instruction;
 with Ada.Real_Time; 

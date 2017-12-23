@@ -7,8 +7,9 @@ package MOS is
 	type Byte_T is mod 2**8; --[0,255]
 	type Short_T is mod 2**16; -- 2 Byte
 
-
-	MOS_MAX_MEMORY : Short_T := 16#1000#;
+    MOS_START_PC : constant Short_T := 16#600#;
+	MOS_MAX_MEMORY : constant Short_T := 16#1000#;
+    MOS_MAX_PROGRAM_SIZE : constant Short_T := MOS_MAX_MEMORY - 1 - MOS_START_PC;
 
 	-- the Range of the stack pointer is fixed!!
 	-- otherwise an exception will be thrown. Thank You Ada :)
@@ -26,7 +27,7 @@ package MOS is
 		X  : Byte_T  := 0; -- Index Register X
 		Y  : Byte_T  := 0; -- Index Register Y
 		P  : Byte_T  := 0; -- Process Status Register
-		PC : Short_T := 16#600#; -- Program Coutner
+		PC : Short_T := MOS_START_PC; -- Program Coutner
 		S  : StackPointer_T := 16#1FF#; -- Stack Pointer from 0x1FF to 0x100
 		Mem : Ram_T(0..MOS_MAX_MEMORY-1) := (others => 0);
 	end record;
@@ -37,10 +38,10 @@ package MOS is
 	-- type MOS_T_REF is access all MOS_T'Class;
 
 	procedure Load_Program_Into_Memory ( This : in out MOS_T;
-								  Program : in Program_T);
+								  Program_Path : in String);
 	
 	
-	function Read_File(File_Name : String) return Program_T;
+	
     procedure Put_Hex(Num : in Integer);
     	procedure Emulate_Cycle (This : in out MOS_T);
     procedure Print_Status (This : in MOS_T);
@@ -51,6 +52,9 @@ package MOS is
 
 	-- This low level/debug functions must be only accessible withing the package
 	private
+    function Read_File(File_Name : String) return Program_T;
+    
+    
 	-----------------------------------------
 	-- Debug Functions
 	-----------------------------------------

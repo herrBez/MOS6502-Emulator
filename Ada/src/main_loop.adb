@@ -1,8 +1,13 @@
 package body Main_Loop is
 
 procedure Main_Loop_f (This : in out MOS_T; Instruction : in Fun_Array) is
-    Next_Release : Ada.Real_Time.Time := 0; 
-    Release_Interval : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Microseconds (1); -- 1 MHz
+    -- Frequency is expressed in MHz
+    -- 1 MHz = 10**(-6) seconds = 1 microsecond = 1000 nanoseconds
+    -- 3 MHz = 3*10**(-6) seconds = 0.333333.. microseconds = 333 nanosceonds
+    Next_Release : Ada.Real_Time.Time := The_Clock; 
+    Frequency : Integer := 3;
+    Period : Integer := 1000/Frequency; 
+    Release_Interval : constant Ada.Real_Time.Time_Span := Ada.Real_Time.Nanoseconds (Period); 
     
     begin
         Next_Release :=  The_Clock + Release_Interval;

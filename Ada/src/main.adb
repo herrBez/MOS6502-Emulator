@@ -8,8 +8,7 @@ with Main_Loop; use Main_Loop;
 
 
 procedure Main is
-	Program : Program_T(0..100);
-	Emulator : MOS_T;
+    Emulator : MOS_T;
 begin
 	if Argument_Count < 1 then
 		Put("Usage: ");
@@ -17,8 +16,7 @@ begin
 		Put(" <input-file> ");
 		New_Line;
 	else
-		Program := Read_File(Argument(1));
-		Load_Program_Into_Memory(Emulator, Program);
+		Load_Program_Into_Memory(Emulator, Argument(1));
 		Main_Loop_f(Emulator, Initialize_Instruction_Table);
 	end if;
 end Main;
