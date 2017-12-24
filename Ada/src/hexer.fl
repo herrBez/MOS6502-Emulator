@@ -1,18 +1,18 @@
 %{
-	#include<stdio.h>
-	int line_number = 0;
+    #include<stdio.h>
+    int line_number = 0;
 %}
 
 %%
-\n					{ ++line_number; }
-[ \t]				{ }
-[0-9A-F][0-9A-F] 	{ printf("16#%s#\n", yytext); }
-.					{ fprintf(stderr,
-						"Line %d: character '%s' not recognized\n", 
-						line_number,yytext
-					);}
+\n                  { ++line_number; }
+[ \t]               { }
+[0-9A-F][0-9A-F]    { printf("16#%s#\n", yytext); }
+.                   { fprintf(stderr,
+                        "Line %d: character '%s' not recognized\n", 
+                        line_number,yytext
+                    );}
 %%
 
 int main() {
-	return yylex();
+    return yylex();
 }

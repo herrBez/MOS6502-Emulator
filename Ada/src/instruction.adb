@@ -2,6 +2,7 @@ package body Instruction is
     function Initialize_Instruction_Table return Fun_Array is
         Instruction_Table : Fun_Array(0..255) := (others => Not_Yet_Supported_Operation'Access);
     begin
+        Instruction_Table(16#EA#) := NOP'Access;
         return Instruction_Table;
     end Initialize_Instruction_Table;
     
