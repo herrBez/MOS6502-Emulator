@@ -2,7 +2,8 @@ package body MOS is
    -- Load Program into Memory
 	procedure Load_Program_Into_Memory(This : in out MOS_T;
 								Program_Path : in String) is
-    Program : Program_T := Read_File(Program_Path);
+    Program_Length : Short_T := Get_Program_Length(Program_Path);
+    Program : Program_T := Read_File(Program_Path, Program_Length);
 	I : Short_T := This.PC;
 	begin
 		for J in Program'Range loop
@@ -22,12 +23,30 @@ package body MOS is
 		Put_Line("=== End ===");
 	end Print_Status;
 	
-	function Read_File(File_Name : String) return Program_T is
+    function Get_Program_Length(File_Name : String) return Short_T is
+        File : File_Type;
+        I : Short_T := 0;
+        s : Unbounded_String;
+    begin
+        Open(File => File,
+			Mode => In_File,
+			Name => File_Name);
+        loop
+			exit when End_Of_File (File);
+            
+            s := To_Unbounded_String(Get_Line (File));
+            I := I + 1;
+        end loop;
+        Close (File);
+		return I;
+    end;
+    
+	function Read_File(File_Name : String; Program_Length : Short_T) return Program_T is
 		File : File_Type;
-		Program : Program_T(0..MOS_MAX_PROGRAM_SIZE) := (others => 0);
+		Program : Program_T(0..Program_Length) := (others => 0);
 		s : Unbounded_String;
 		I : Short_T := 0;
-		begin
+    begin
 		Open(File => File,
 			Mode => In_File,
 			Name => File_Name);
@@ -45,7 +64,7 @@ package body MOS is
 			I := I + 1;
 		end loop;
 		Close (File);
-		return Program;
+        return Program;
 	end Read_File;
 
 	

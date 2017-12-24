@@ -51,7 +51,8 @@ package MOS is
 
 	-- This low level/debug functions must be only accessible withing the package
 	private
-    function Read_File(File_Name : String) return Program_T;
+    function Read_File(File_Name : String; Program_Length : Short_T) return Program_T;
+    function Get_Program_Length(File_Name : String) return Short_T;
     
     
 	-----------------------------------------
